@@ -7,7 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation
+ * Annotation for enabling Jakarta Data generated Repository implementations
+ * to be registered as beans in the Spring's {@link org.springframework.context.ApplicationContext}
  *
  * @author Mikhail Polivakha
  */
@@ -23,4 +24,9 @@ public @interface EnableJakartaDataRepositories {
      * with {@link jakarta.data.repository.Repository}.
      */
     boolean failFast() default true;
+
+    /**
+     * Explicit specification of the packages to scan for jakarta data repositories
+     */
+    String[] packagesToScan();
 }
