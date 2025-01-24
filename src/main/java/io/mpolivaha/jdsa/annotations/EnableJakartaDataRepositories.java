@@ -1,4 +1,6 @@
-package io.mpolivaha.jdsa;
+package io.mpolivaha.jdsa.annotations;
+
+import io.mpolivaha.jdsa.JakartaDataVendor;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -26,7 +28,14 @@ public @interface EnableJakartaDataRepositories {
     boolean failFast() default true;
 
     /**
-     * Explicit specification of the packages to scan for jakarta data repositories
+     * Explicit specification of the packages to scan for jakarta data repositories.
      */
     String[] packagesToScan();
+
+    /**
+     * Explictely specify vendor to be used for beans creation. If it is unset, then
+     * we'll try to guess the Jakarta Data vendor by ourselves. If this property is set,
+     * then we'll search only for this exact provider. If we fail, then the exception is raised
+     */
+    JakartaDataVendor jakartaDataVendor();
 }

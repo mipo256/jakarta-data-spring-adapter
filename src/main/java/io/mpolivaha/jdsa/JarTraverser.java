@@ -1,5 +1,7 @@
 package io.mpolivaha.jdsa;
 
+import io.mpolivaha.jdsa.core.Configuration;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,7 +11,9 @@ import java.util.jar.JarInputStream;
 import java.util.logging.Logger;
 
 /**
+ * Class that is responsible to traverse all the classes in the given Jar.
  *
+ * @author Mikhail Polivakha
  */
 public class JarTraverser {
 
@@ -26,7 +30,7 @@ public class JarTraverser {
                     // Files.pathSeparator is not used here the defined path separator for JAR files is '/' and it is not platform dependent.
                     String candidateClassName = jarEntry.getName().replace('/', '.');
                     candidateClassName = candidateClassName.substring(0, candidateClassName.lastIndexOf('.'));
-                    Class<?> maybeClass = tryLoading(candidateClassName);
+                    Class<?> maybeClass = ClassLoadingUtils.tryLoading(candidateClassName);
 
                     if (maybeClass != null) {
                         action.accept(maybeClass);
@@ -41,17 +45,6 @@ public class JarTraverser {
             } else {
                 LOG.warning(SIGN_ERROR.formatted(jarLocation.getFileName()));
             }
-        }
-    }
-
-    private Class<?> tryLoading(String name) {
-        try {
-            return Class.forName(name);
-        } catch (Exception o_0) {
-            return null;
-        } catch (NoClassDefFoundError | ExceptionInInitializerError error) {
-            // might happen in case some class was present in compilation classpath but is absent in runtime classpath
-            return null;
         }
     }
 
