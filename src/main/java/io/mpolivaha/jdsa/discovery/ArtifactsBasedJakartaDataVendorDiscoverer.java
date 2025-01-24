@@ -19,7 +19,7 @@ public class ArtifactsBasedJakartaDataVendorDiscoverer implements JakartaDataVen
 
         JakartaDataVendor jakartaDataVendor = Configuration.getInstance().jakartaDataVendor();
 
-        if (jakartaDataVendor != null) {
+        if (jakartaDataVendor != JakartaDataVendor.UNSPECIFIED) {
             if (jakartaDataVendor.isPresent()) {
                 return jakartaDataVendor;
             } else {
@@ -27,7 +27,7 @@ public class ArtifactsBasedJakartaDataVendorDiscoverer implements JakartaDataVen
             }
         } else {
             Set<JakartaDataVendor> candidates = new HashSet<>();
-            for (JakartaDataVendor value : JakartaDataVendor.values()) {
+            for (JakartaDataVendor value : JakartaDataVendor.explicitValues()) {
                 if (value.isPresent()) {
                     candidates.add(value);
                 }

@@ -34,7 +34,12 @@ public enum JakartaDataVendor {
             }
     ),
     OPEN_LIBERTY(Lazy.of(() -> false), (repository, context) -> null),
-    JNOSQL(Lazy.of(() -> false), (repository, context) -> null);
+    JNOSQL(Lazy.of(() -> false), (repository, context) -> null),
+
+    /**
+     * Stub in order to account for that fact that in Java the annotation attributes cannot be {@code null}
+     */
+    UNSPECIFIED(null, null);
 
     private final Lazy<Boolean> discoveryFunction;
     private final BiFunction<Class<?>, ApplicationContext, ?> implementationExtractor;
@@ -51,5 +56,13 @@ public enum JakartaDataVendor {
 
     public Object createImplementation(Class<?> repositoryInterface, ApplicationContext applicationContext) {
         return implementationExtractor.apply(repositoryInterface, applicationContext);
+    }
+
+    public static JakartaDataVendor[] explicitValues() {
+        return new JakartaDataVendor[] {
+                JakartaDataVendor.HIBERNATE,
+                JakartaDataVendor.JNOSQL,
+                JakartaDataVendor.OPEN_LIBERTY
+        };
     }
 }

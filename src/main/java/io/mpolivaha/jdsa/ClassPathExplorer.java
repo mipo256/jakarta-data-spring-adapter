@@ -1,6 +1,7 @@
 package io.mpolivaha.jdsa;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,7 +28,7 @@ public class ClassPathExplorer {
         this.jarTraverser = jarTraverser;
     }
 
-    public Set<Class<?>> findAllClassesInClasspath(Predicate<Class<?>> predicate) throws URISyntaxException {
+    public Set<Class<?>> findAllClassesInClasspath(Predicate<Class<?>> predicate) throws URISyntaxException, IOException {
         String classpath = System.getProperty("java.class.path");
         String[] classPathResources = classpath.split(File.pathSeparator);
 
@@ -49,7 +50,7 @@ public class ClassPathExplorer {
 
         Path currentExecutableJarLocation = getExecutableJarLocation();
 
-        jarTraverser.traverse(currentExecutableJarLocation, clazz -> {
+        jarTraverser.traverseDirectory(currentExecutableJarLocation, clazz -> {
             if (predicate.test(clazz)) {
                 classes.add(clazz);
             }
@@ -68,7 +69,7 @@ public class ClassPathExplorer {
     ) {
         Set<Class<?>> loadedClasses = new HashSet<>();
 
-        jarTraverser.traverse(classPathEntry, clazz -> {
+        jarTraverser.traverseJar(classPathEntry, clazz -> {
             if (predicate.test(clazz)) {
                 loadedClasses.add(clazz);
             }

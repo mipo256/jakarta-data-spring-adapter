@@ -17,6 +17,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class JakartaDataRepositoriesRegistrar implements InitializingBean, Appli
     }
 
     @Override
-    public void afterPropertiesSet() throws URISyntaxException {
+    public void afterPropertiesSet() throws URISyntaxException, IOException {
         Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(EnableJakartaDataRepositories.class);
 
         if (beansWithAnnotation.size() == 1) {
@@ -60,7 +61,7 @@ public class JakartaDataRepositoriesRegistrar implements InitializingBean, Appli
 
         ConfigurableListableBeanFactory autowireCapableBeanFactory = (ConfigurableListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
 
-        Set<Class<?>> repositoryCandidates = new ClassPathExplorer(new JarTraverser()).findAllClassesInClasspath(aClass -> aClass.getAnnotation(Repository.class) != null);
+        Set<Class<?>> repositoryCandidates = classPathExplorer.findAllClassesInClasspath(aClass -> aClass.getAnnotation(Repository.class) != null);
 
         for (Class<?> repositoryCandidate : repositoryCandidates) {
             Object implementation = jakartaDataVendor.createImplementation(repositoryCandidate, applicationContext);

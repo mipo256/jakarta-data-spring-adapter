@@ -30,12 +30,12 @@ public @interface EnableJakartaDataRepositories {
     /**
      * Explicit specification of the packages to scan for jakarta data repositories.
      */
-    String[] packagesToScan();
+    String[] packagesToScan() default {};
 
     /**
      * Explictely specify vendor to be used for beans creation. If it is unset, then
      * we'll try to guess the Jakarta Data vendor by ourselves. If this property is set,
      * then we'll search only for this exact provider. If we fail, then the exception is raised
      */
-    JakartaDataVendor jakartaDataVendor();
+    JakartaDataVendor jakartaDataVendor() default JakartaDataVendor.UNSPECIFIED;
 }
