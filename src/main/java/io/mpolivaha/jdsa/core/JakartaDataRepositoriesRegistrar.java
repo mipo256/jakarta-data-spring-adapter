@@ -22,6 +22,12 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The main component that is responsible for registration Jakarta Data repositories as beans
+ * in the context.
+ *
+ * @author Mikhail Polivakha
+ */
 @Configuration
 public class JakartaDataRepositoriesRegistrar implements InitializingBean, ApplicationContextAware {
 
