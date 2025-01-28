@@ -2,6 +2,13 @@ package io.mpolivaha.jdsa.utils;
 
 import java.util.function.Supplier;
 
+/**
+ * The lazy wrapper around the value. The idea is that if the {@link #value} is
+ * already resolved, the underlying {@link #supplier} is not going to be called again
+ * to obtain the {@link #value}.
+ *
+ * @author Mikhail Polivakha
+ */
 public class Lazy<T> {
 
     private boolean resolved;
