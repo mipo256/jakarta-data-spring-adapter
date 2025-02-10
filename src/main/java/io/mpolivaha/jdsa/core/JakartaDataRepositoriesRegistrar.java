@@ -60,14 +60,22 @@ public class JakartaDataRepositoriesRegistrar implements InitializingBean, Appli
         } else {
             StringBuilder duplicates = buildDuplicatePairs(beansWithAnnotation);
             throw new IllegalStateException(
-                    "The application context contains % beans annotated with @EnableJakartaDataRepositories : " + duplicates);
+                    "The application context contains %d beans annotated with @EnableJakartaDataRepositories %s".formatted(beansWithAnnotation.size(), duplicates)
+            );
         }
 
         JakartaDataVendor jakartaDataVendor = jakartaDataVendorDiscoverer.discover();
 
         ConfigurableListableBeanFactory autowireCapableBeanFactory = (ConfigurableListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
 
-        Set<Class<?>> repositoryCandidates = classPathExplorer.findAllClassesInClasspath(aClass -> aClass.getAnnotation(Repository.class) != null);
+        Set<Class<?>> repositoryCandidates = classPathExplorer.findAllClassesInClasspath(aClass -> {
+            try {
+                return aClass.getAnnotation(Repository.class) != null;
+                // TODO: class constant pool resolution logic is duplicated here and in ClassLoadingUtils
+            } catch (NoClassDefFoundError | ExceptionInInitializerError e) {
+                return false;
+            }
+        });
 
         for (Class<?> repositoryCandidate : repositoryCandidates) {
             Object implementation = jakartaDataVendor.createImplementation(repositoryCandidate, applicationContext);

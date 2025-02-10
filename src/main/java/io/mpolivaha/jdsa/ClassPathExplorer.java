@@ -37,7 +37,7 @@ public class ClassPathExplorer {
         for (String classPathResource : classPathResources) {
             Path classPathEntry = Paths.get(classPathResource);
 
-            if (classPathEntry.getFileName().endsWith(DOT_JAR)) {
+            if (classPathEntry.toFile().getAbsolutePath().endsWith(DOT_JAR)) {
                 if (Files.exists(classPathEntry)) {
                     if (!Files.isDirectory(classPathEntry)) {
                         classes.addAll(exploreClassPathEntry(classPathEntry, predicate));
@@ -60,7 +60,7 @@ public class ClassPathExplorer {
     }
 
     private static Path getExecutableJarLocation() throws URISyntaxException {
-        return new File(ClassPathExplorer.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toPath();
+            return new File(ClassPathExplorer.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toPath();
     }
 
     private Set<Class<?>> exploreClassPathEntry(

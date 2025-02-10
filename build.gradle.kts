@@ -2,8 +2,8 @@ plugins {
     id("java")
 }
 
-group = "io.mpolivaha"
-version = "1.0.0-SNAPSHOT"
+group = "com.mpolivaha.jdsa"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -20,6 +20,7 @@ dependencies {
     implementation("jakarta.data:jakarta-data-api:1.0.0-M1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation(files("test_libs/jakarta-data-test-repos-1.0.0.jar"))
 }
 
 tasks.test {
