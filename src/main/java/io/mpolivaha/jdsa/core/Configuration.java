@@ -2,13 +2,20 @@ package io.mpolivaha.jdsa.core;
 
 import io.mpolivaha.jdsa.JakartaDataVendor;
 import io.mpolivaha.jdsa.annotations.EnableJakartaDataRepositories;
+import io.mpolivaha.jdsa.annotations.HibernateJakartaDataConfiguration;
 
+/**
+ * Class that holds common configuration provided by user via {@link EnableJakartaDataRepositories}.
+ *
+ * @author Mikhail Polivakha
+ */
 public class Configuration {
 
     private static Configuration INSTANCE;
 
     private boolean failFast;
     private JakartaDataVendor jakartaDataVendor;
+    private String sessionFactoryBeanRef;
 
     /**
      * The double-checked locking is intentionally not used here
@@ -19,6 +26,9 @@ public class Configuration {
         INSTANCE = new Configuration();
         INSTANCE.failFast = enableJakartaDataRepositories.failFast();
         INSTANCE.jakartaDataVendor = enableJakartaDataRepositories.jakartaDataVendor();
+
+        HibernateJakartaDataConfiguration config = enableJakartaDataRepositories.hibernateConfig();
+        INSTANCE.sessionFactoryBeanRef = config.sessionFactoryRef();
     }
 
     public static Configuration getInstance() {
@@ -31,5 +41,9 @@ public class Configuration {
 
     public boolean isFailFast() {
         return failFast;
+    }
+
+    public String getSessionFactoryBeanRef() {
+        return sessionFactoryBeanRef;
     }
 }

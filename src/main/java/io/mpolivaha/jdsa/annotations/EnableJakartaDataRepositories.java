@@ -38,4 +38,6 @@ public @interface EnableJakartaDataRepositories {
      * then we'll search only for this exact provider. If we fail, then the exception is raised
      */
     JakartaDataVendor jakartaDataVendor() default JakartaDataVendor.UNSPECIFIED;
+
+    HibernateJakartaDataConfiguration hibernateConfig() default @HibernateJakartaDataConfiguration;
 }

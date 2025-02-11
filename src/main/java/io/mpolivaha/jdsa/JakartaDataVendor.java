@@ -1,10 +1,9 @@
 package io.mpolivaha.jdsa;
 
+import io.mpolivaha.jdsa.core.Configuration;
 import io.mpolivaha.jdsa.utils.Lazy;
-import jakarta.persistence.EntityManagerFactory;
-import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiFunction;
@@ -21,12 +20,20 @@ public enum JakartaDataVendor {
             Lazy.of(() -> ClassLoadingUtils.isPresent("org.hibernate.StatelessSession")),
             (repository, context) -> {
                 Class<?> implClass = ClassLoadingUtils.tryLoading(repository.getName() + "_");
-                EntityManagerFactory entityManagerFactory = context.getBean(EntityManagerFactory.class);
-                SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-                StatelessSession statelessSession = sessionFactory.openStatelessSession();
+                jakarta.persistence.EntityManagerFactory entityManagerFactory;
+
+                String sessionFactoryBeanRef = Configuration.getInstance().getSessionFactoryBeanRef();
+                if (StringUtils.hasText(sessionFactoryBeanRef)) {
+                    entityManagerFactory = context.getBean(sessionFactoryBeanRef, jakarta.persistence.EntityManagerFactory.class);
+                } else {
+                    entityManagerFactory = context.getBean(jakarta.persistence.EntityManagerFactory.class);
+                }
+
+                org.hibernate.SessionFactory sessionFactory = entityManagerFactory.unwrap(org.hibernate.SessionFactory.class);
+                org.hibernate.StatelessSession statelessSession = sessionFactory.openStatelessSession();
 
                 try {
-                    return implClass.getDeclaredConstructor(StatelessSession.class).newInstance(statelessSession);
+                    return implClass.getDeclaredConstructor(org.hibernate.SessionFactory.class).newInstance(statelessSession);
                 } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                          IllegalAccessException e) {
                     throw new RuntimeException(e);

@@ -71,7 +71,7 @@ public class JakartaDataRepositoriesRegistrar implements InitializingBean, Appli
         Set<Class<?>> repositoryCandidates = classPathExplorer.findAllClassesInClasspath(aClass -> {
             try {
                 return aClass.getAnnotation(Repository.class) != null;
-                // TODO: class constant pool resolution logic is duplicated here and in ClassLoadingUtils
+                // TODO: class verification/resolution logic is duplicated here and in ClassLoadingUtils
             } catch (NoClassDefFoundError | ExceptionInInitializerError e) {
                 return false;
             }
