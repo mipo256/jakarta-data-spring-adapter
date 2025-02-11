@@ -23,9 +23,11 @@ public class ClassPathExplorer {
     private static final String DOT_JAR = ".jar";
 
     private final JarTraverser jarTraverser;
+    private final FileSystemTraverser fileSystemTraverser;
 
     public ClassPathExplorer(JarTraverser jarTraverser) {
         this.jarTraverser = jarTraverser;
+        this.fileSystemTraverser = new FileSystemTraverser();
     }
 
     public Set<Class<?>> findAllClassesInClasspath(Predicate<Class<?>> predicate) throws URISyntaxException, IOException {
@@ -37,30 +39,24 @@ public class ClassPathExplorer {
         for (String classPathResource : classPathResources) {
             Path classPathEntry = Paths.get(classPathResource);
 
-            if (classPathEntry.toFile().getAbsolutePath().endsWith(DOT_JAR)) {
-                if (Files.exists(classPathEntry)) {
-                    if (!Files.isDirectory(classPathEntry)) {
-                        classes.addAll(exploreClassPathEntry(classPathEntry, predicate));
-                    }
-                } else {
-                    LOG.warning("The classpath entry %s cannot be scanned since it does not exists".formatted(classPathResource));
-                }
+             if (Files.exists(classPathEntry)) {
+                 if (classPathEntry.toFile().getAbsolutePath().endsWith(DOT_JAR)) {
+                     if (!Files.isDirectory(classPathEntry)) {
+                         classes.addAll(exploreClassPathEntry(classPathEntry, predicate));
+                     }
+                 } else {
+                     fileSystemTraverser.traverse(classPathEntry, aClass -> {
+                         if (predicate.test(aClass)) {
+                             classes.add(aClass);
+                         }
+                     });
+                 }
+            } else {
+                 LOG.warning("The classpath entry %s cannot be scanned since it does not exists".formatted(classPathResource));
             }
         }
-
-        Path currentExecutableJarLocation = getExecutableJarLocation();
-
-        jarTraverser.traverseDirectory(currentExecutableJarLocation, clazz -> {
-            if (predicate.test(clazz)) {
-                classes.add(clazz);
-            }
-        });
-
+        
         return classes;
-    }
-
-    private static Path getExecutableJarLocation() throws URISyntaxException {
-            return new File(ClassPathExplorer.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toPath();
     }
 
     private Set<Class<?>> exploreClassPathEntry(

@@ -1,6 +1,7 @@
 package io.mpolivaha.jdsa;
 
 import io.mpolivaha.jdsa.core.Configuration;
+import io.mpolivaha.jdsa.utils.ClassLoadingUtils;
 import io.mpolivaha.jdsa.utils.Lazy;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
@@ -33,7 +34,7 @@ public enum JakartaDataVendor {
                 org.hibernate.StatelessSession statelessSession = sessionFactory.openStatelessSession();
 
                 try {
-                    return implClass.getDeclaredConstructor(org.hibernate.SessionFactory.class).newInstance(statelessSession);
+                    return implClass.getDeclaredConstructor(org.hibernate.StatelessSession.class).newInstance(statelessSession);
                 } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                          IllegalAccessException e) {
                     throw new RuntimeException(e);

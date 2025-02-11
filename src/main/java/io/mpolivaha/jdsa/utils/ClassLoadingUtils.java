@@ -1,4 +1,4 @@
-package io.mpolivaha.jdsa;
+package io.mpolivaha.jdsa.utils;
 
 /**
  * Utility class for class loading operations

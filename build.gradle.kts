@@ -27,6 +27,7 @@ dependencies {
     testImplementation("org.hibernate:hibernate-core:$hibernateCoreVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(files("test_libs/jakarta-data-test-repos-1.0.0.jar"))
+    testAnnotationProcessor("org.hibernate.orm:hibernate-jpamodelgen:$hibernateCoreVersion")
 }
 
 tasks.test {

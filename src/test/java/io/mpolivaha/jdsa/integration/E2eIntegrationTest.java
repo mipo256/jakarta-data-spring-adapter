@@ -12,8 +12,14 @@ public class E2eIntegrationTest {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private PersonRepository personRepository;
+
     @Test
-    void test() {
+    void testEndToEnd() {
         BookRepository bookRepository = applicationContext.getBean(BookRepository.class);
         PersonRepository personRepository = applicationContext.getBean(PersonRepository.class);
 

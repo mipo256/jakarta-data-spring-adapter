@@ -1,6 +1,7 @@
 package io.mpolivaha.jdsa;
 
 import io.mpolivaha.jdsa.core.Configuration;
+import io.mpolivaha.jdsa.utils.ClassLoadingUtils;
 import jakarta.data.repository.Repository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
